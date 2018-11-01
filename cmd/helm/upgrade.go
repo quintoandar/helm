@@ -84,32 +84,33 @@ which results in "pwd: 3jk$o2z=f\30with'quote".
 `
 
 type upgradeCmd struct {
-	release      string
-	chart        string
-	out          io.Writer
-	client       helm.Interface
-	dryRun       bool
-	recreate     bool
-	force        bool
-	disableHooks bool
-	valueFiles   valueFiles
-	values       []string
-	stringValues []string
-	fileValues   []string
-	verify       bool
-	keyring      string
-	install      bool
-	namespace    string
-	version      string
-	timeout      int64
-	resetValues  bool
-	reuseValues  bool
-	wait         bool
-	repoURL      string
-	username     string
-	password     string
-	devel        bool
-	description  string
+	release       string
+	chart         string
+	out           io.Writer
+	client        helm.Interface
+	dryRun        bool
+	recreate      bool
+	force         bool
+	disableHooks  bool
+	valueFiles    valueFiles
+	values        []string
+	stringValues  []string
+	fileValues    []string
+	verify        bool
+	keyring       string
+	install       bool
+	namespace     string
+	version       string
+	timeout       int64
+	resetValues   bool
+	reuseValues   bool
+	wait          bool
+	repoURL       string
+	username      string
+	password      string
+	devel         bool
+	description   string
+	cleanupOnFail bool
 
 	certFile string
 	keyFile  string
@@ -174,6 +175,7 @@ func newUpgradeCmd(client helm.Interface, out io.Writer) *cobra.Command {
 	f.StringVar(&upgrade.caFile, "ca-file", "", "verify certificates of HTTPS-enabled servers using this CA bundle")
 	f.BoolVar(&upgrade.devel, "devel", false, "use development versions, too. Equivalent to version '>0.0.0-0'. If --version is set, this is ignored.")
 	f.StringVar(&upgrade.description, "description", "", "specify the description to use for the upgrade, rather than the default")
+	f.BoolVar(&upgrade.cleanupOnFail, "cleanup-on-fail", false, "allow deletion of new resources created in this upgrade when upgrade failed")
 
 	f.MarkDeprecated("disable-hooks", "use --no-hooks instead")
 
@@ -265,7 +267,8 @@ func (u *upgradeCmd) run() error {
 		helm.ResetValues(u.resetValues),
 		helm.ReuseValues(u.reuseValues),
 		helm.UpgradeWait(u.wait),
-		helm.UpgradeDescription(u.description))
+		helm.UpgradeDescription(u.description),
+		helm.UpgradeCleanupOnFail(u.cleanupOnFail))
 	if err != nil {
 		return fmt.Errorf("UPGRADE FAILED: %v", prettyError(err))
 	}
