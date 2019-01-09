@@ -227,6 +227,13 @@ func ReleaseTestCleanup(cleanup bool) ReleaseTestOption {
 	}
 }
 
+// ReleaseTestParallel is a boolean value representing whether to run test pods in parallel
+func ReleaseTestParallel(parallel bool) ReleaseTestOption {
+	return func(opts *options) {
+		opts.testReq.Parallel = parallel
+	}
+}
+
 // RollbackTimeout specifies the number of seconds before kubernetes calls timeout
 func RollbackTimeout(timeout int64) RollbackOption {
 	return func(opts *options) {
@@ -287,6 +294,20 @@ func RollbackDescription(description string) RollbackOption {
 func DeleteDescription(description string) DeleteOption {
 	return func(opts *options) {
 		opts.uninstallReq.Description = description
+	}
+}
+
+// UpgradeCleanupOnFail allows deletion of new resources created in this upgrade when upgrade failed
+func UpgradeCleanupOnFail(cleanupOnFail bool) UpdateOption {
+	return func(opts *options) {
+		opts.updateReq.CleanupOnFail = cleanupOnFail
+	}
+}
+
+// RollbackCleanupOnFail allows deletion of new resources created in this rollback when rollback failed
+func RollbackCleanupOnFail(cleanupOnFail bool) RollbackOption {
+	return func(opts *options) {
+		opts.rollbackReq.CleanupOnFail = cleanupOnFail
 	}
 }
 

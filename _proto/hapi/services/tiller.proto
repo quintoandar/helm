@@ -212,6 +212,8 @@ message UpdateReleaseRequest {
 	bool force = 11;
 	// Description, if set, will set the description for the updated release
 	string description = 12;
+	// Allow deletion of new resources created in this update when update failed
+	bool cleanup_on_fail = 13;
 }
 
 // UpdateReleaseResponse is the response to an update request.
@@ -239,6 +241,8 @@ message RollbackReleaseRequest {
 	bool force = 8;
 	// Description, if set, will set the description for the rollback
 	string description = 9;
+	// Allow deletion of new resources created in this rollback when rollback failed
+	bool cleanup_on_fail = 13;
 }
 
 // RollbackReleaseResponse is the response to an update request.
@@ -339,6 +343,8 @@ message TestReleaseRequest {
 	int64 timeout = 2;
 	// cleanup specifies whether or not to attempt pod deletion after test completes
 	bool cleanup = 3;
+	// parallel specifies whether or not to run test pods in parallel
+	bool parallel = 4;
 }
 
 // TestReleaseResponse represents a message from executing a test
